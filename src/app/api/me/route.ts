@@ -7,7 +7,6 @@ export async function GET(request: Request) {
 
     const token = authHeader.replace('Bearer ', '');
 
-    // Parse JWT to get user ID
     const parts = token.split('.');
     if (parts.length !== 3) return NextResponse.json({ error: 'Invalid token format' }, { status: 401 });
 
@@ -27,33 +26,54 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'No service key configured' }, { status: 500 });
     }
 
-    // Query profiles with service_role key (bypasses RLS)
-    const url = `${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=*`;
+    const sb = (path: string, init?: RequestInit) =>
+      fetch(`${supabaseUrl}${path}`, {
+        headers: { apikey: key, Authorization: `Bearer ${key}`, ...init?.headers },
+        ...init,
+      });
 
-    const res = await fetch(url, {
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-      },
+    // Query profiles
+    const profileRes = await sb(`/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=*`);
+    const profiles = await profileRes.json();
+
+    if (Array.isArray(profiles) && profiles.length > 0) {
+      return NextResponse.json(profiles[0]);
+    }
+
+    // Profile not found — auto-create room + profile
+    let roomId: string;
+
+    // Check if any rooms exist
+    const roomsRes = await sb('/rest/v1/rooms?select=*&limit=1');
+    const rooms = await roomsRes.json();
+
+    if (Array.isArray(rooms) && rooms.length > 0) {
+      roomId = rooms[0].id;
+    } else {
+      // Create a room
+      const createRoom = await sb('/rest/v1/rooms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
+        body: JSON.stringify({ name: 'MIYA潮玩社', slug: `room-${userId.slice(0, 8)}`, owner_id: userId }),
+      });
+      const newRooms = await createRoom.json();
+      roomId = Array.isArray(newRooms) ? newRooms[0].id : newRooms.id;
+    }
+
+    // Get user email from auth
+    const userRes = await sb(`/auth/v1/admin/users/${userId}`);
+    const user = await userRes.json();
+    const displayName = user.email?.split('@')[0] || '用户';
+
+    // Create profile
+    const createProfile = await sb('/rest/v1/profiles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      body: JSON.stringify({ id: userId, display_name: displayName, role: 'operator', room_id: roomId }),
     });
+    const newProfiles = await createProfile.json();
 
-    const body = await res.text();
-
-    if (!res.ok) {
-      return NextResponse.json({
-        error: 'Supabase error',
-        status: res.status,
-        detail: body,
-        userId,
-      }, { status: 500 });
-    }
-
-    const data = JSON.parse(body);
-    if (!Array.isArray(data) || data.length === 0) {
-      return NextResponse.json({ error: 'Profile not found', userId }, { status: 404 });
-    }
-
-    return NextResponse.json(data[0]);
+    return NextResponse.json(Array.isArray(newProfiles) ? newProfiles[0] : newProfiles);
   } catch (e: any) {
     return NextResponse.json({ error: 'Internal error', detail: e?.message || String(e) }, { status: 500 });
   }
