@@ -130,7 +130,7 @@ export default function QuickEntryPage() {
       {/* Players */}
       <div className="bg-white rounded-2xl p-5 shadow-sm mb-5">
         <div className="font-bold text-sm text-[#1E1B4B] mb-4">👤 选择玩家</div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-2.5">
           {players.map((p, i) => (
             <PlayerChip key={p.id} id={p.id} name={p.name} points={p.total_points}
               selected={selPlayer?.id === p.id} index={i}
@@ -142,7 +142,7 @@ export default function QuickEntryPage() {
       {/* Prizes */}
       <div className="bg-white rounded-2xl p-5 shadow-sm mb-5">
         <div className="font-bold text-sm text-[#1E1B4B] mb-4">🎁 选择奖品</div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-2.5">
           {prizes.map((p, i) => (
             <PrizeChip key={p.id} id={p.id} name={p.name} points={p.points}
               selected={selPrize?.id === p.id} index={i}

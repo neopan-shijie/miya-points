@@ -95,7 +95,7 @@ export default function ExportPage() {
           </div>
         </div>
 
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button onClick={exportDetail} disabled={exporting}
             className="flex-1 h-14 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#FF4081] text-white font-extrabold hover:scale-[1.02] transition-all">
             📊 导出明细

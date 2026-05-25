@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
@@ -11,10 +12,19 @@ const NAV_ITEMS = [
   { path: '/export-page', emoji: '📎', label: '数据导出' },
 ];
 
-export default function Sidebar({ displayName }: { displayName: string }) {
+export default function Sidebar({ displayName, onNavigate }: { displayName: string; onNavigate?: () => void }) {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    if (mountedRef.current) {
+      onNavigate?.();
+    } else {
+      mountedRef.current = true;
+    }
+  }, [pathname]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -23,7 +33,7 @@ export default function Sidebar({ displayName }: { displayName: string }) {
   };
 
   return (
-    <aside className="w-[220px] min-w-[220px] bg-gradient-to-b from-[#1E1B4B] to-[#2D1B69] flex flex-col py-5 z-10">
+    <div className="flex flex-col h-full py-5">
       {/* Brand */}
       <div className="px-5 pb-6 text-center">
         <div className="text-lg font-extrabold bg-gradient-to-r from-[#FF6B35] via-[#FF4081] to-[#7C4DFF] bg-clip-text text-transparent tracking-wide">
@@ -65,6 +75,6 @@ export default function Sidebar({ displayName }: { displayName: string }) {
           🚪 退出登录
         </button>
       </div>
-    </aside>
+    </div>
   );
 }

@@ -76,7 +76,7 @@ export default function LoginPage() {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-xl flex items-center justify-center z-[9999]">
-      <div className="bg-white rounded-[32px] p-10 px-8 w-[420px] shadow-[0_24px_60px_rgba(0,0,0,0.3)] text-center relative overflow-hidden">
+      <div className="bg-white rounded-[32px] p-10 px-8 max-w-[420px] w-full mx-4 shadow-[0_24px_60px_rgba(0,0,0,0.3)] text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B35] via-[#FF4081] to-[#7C4DFF]" />
         <div className="text-5xl mb-3">🧸</div>
         <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-[#FF6B35] via-[#FF4081] to-[#7C4DFF] bg-clip-text text-transparent">

@@ -95,7 +95,7 @@ export default function Scoreboard({ roomId }: { roomId: string }) {
   const medal = (r: number) => r === 1 ? '🥇' : r === 2 ? '🥈' : r === 3 ? '🥉' : null;
 
   return (
-    <aside className="w-[300px] min-w-[300px] bg-white border-l border-gray-100 flex flex-col overflow-y-auto">
+    <div className="flex flex-col h-full overflow-y-auto">
       <div className="p-5 text-center border-b border-gray-100">
         <div className="text-base font-bold text-[#1E1B4B]">🏆 实时排行榜</div>
       </div>
@@ -140,6 +140,6 @@ export default function Scoreboard({ roomId }: { roomId: string }) {
           })
         )}
       </div>
-    </aside>
+    </div>
   );
 }

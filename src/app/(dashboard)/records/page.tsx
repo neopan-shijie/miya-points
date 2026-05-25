@@ -73,7 +73,7 @@ export default function RecordsPage() {
   return (
     <div className="animate-[fadeInUp_0.35s_ease]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
         <h1 className="text-[1.4rem] font-extrabold flex items-center gap-2.5">
           <span className="w-[5px] h-7 rounded-sm bg-gradient-to-r from-[#FF6B35] to-[#FF4081]" />
           📋 积分变动明细
