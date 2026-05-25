@@ -88,8 +88,8 @@ export async function POST(request: Request) {
   ];
 
   const defaultPlayers = [
-    '小小小小陳', '哼哈小将', '追月', 'Yuki Li', '珠珠🐷宝',
-    '遛娃大队长', '肉肉', '欧气Beck', 'Archer',
+    '玩家01', '玩家02', '玩家03', '玩家04', '玩家05',
+    '玩家06', '玩家07', '玩家08', '玩家09',
   ];
 
   for (const p of defaultProducts) {
